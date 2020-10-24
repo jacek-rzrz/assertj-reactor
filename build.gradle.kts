@@ -1,7 +1,7 @@
 import com.jfrog.bintray.gradle.BintrayExtension.*
 import java.util.*
 
-version = "1.0.0"
+version = "1.0.1"
 description = "AssertJ extensions for Mono and Flux."
 group = "pl.rzrz"
 
