@@ -1,3 +1,38 @@
 #!/usr/bin/env bash
 
+set -e
+
+function bailOut {
+  echo "Bailing out" 2>&1
+  exit 1
+}
+
+echo -n "Checking repo status... "
+if [ ! -z "$(git status --porcelain)" ]; then
+  echo "there are uncommitted changes."
+  bailOut
+fi
+echo "clean."
+
+echo -n "Version number... "
+version=$(./gradlew --quiet printVersion)
+echo $version
+
+echo -n "Checking version uniqueness... "
+if git ls-remote --exit-code --tags origin $version >/dev/null; then
+  echo "Tag $version exists. Bump needed?"
+  bailOut
+fi
+echo "OK"
+
+echo "Running tests..."
+./gradlew clean test --no-build-cache
+
+echo "Publishing..."
 ./gradlew bintrayUpload
+
+echo "Tagging the release..."
+git tag $version
+git push origin $version
+
+echo "All done"

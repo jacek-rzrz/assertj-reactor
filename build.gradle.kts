@@ -106,3 +106,9 @@ bintray {
         })
     })
 }
+
+tasks.create("printVersion") {
+    doLast {
+        println(project.version)
+    }
+}
