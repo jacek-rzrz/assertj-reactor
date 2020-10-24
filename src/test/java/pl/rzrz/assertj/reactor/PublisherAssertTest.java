@@ -2,7 +2,6 @@ package pl.rzrz.assertj.reactor;
 
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.rzrz.assertj.reactor.Assertions.assertThat;
