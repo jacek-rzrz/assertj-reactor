@@ -1,7 +1,7 @@
 import com.jfrog.bintray.gradle.BintrayExtension.*
 import java.util.*
 
-version = "1.0.1"
+version = "1.0.2"
 description = "AssertJ extensions for Mono and Flux."
 group = "pl.rzrz"
 
@@ -17,6 +17,7 @@ repositories {
 
 java {
     withSourcesJar()
+    withJavadocJar()
 }
 
 val reactorVersion = "3.3.10.RELEASE"
@@ -98,9 +99,9 @@ bintray {
                 sign = true
             })
             mavenCentralSync(closureOf<MavenCentralSyncConfig> {
-                sync = false
-                user = "token"
-                password = "pass"
+                sync = true
+                user = System.getenv("OSS_SONATYPE_USER")
+                password = System.getenv("OSS_SONATYPE_PASSWORD")
                 close = "1"
             })
         })
