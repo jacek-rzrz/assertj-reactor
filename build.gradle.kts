@@ -1,7 +1,7 @@
 import com.jfrog.bintray.gradle.BintrayExtension.*
 import java.util.*
 
-version = "1.0.2"
+version = "1.0.3"
 description = "AssertJ extensions for Mono and Flux."
 group = "pl.rzrz"
 
@@ -9,6 +9,11 @@ plugins {
     `java-library`
     `maven-publish`
     id("com.jfrog.bintray") version "1.8.5"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 repositories {
