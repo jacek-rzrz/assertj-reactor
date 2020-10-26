@@ -1,7 +1,7 @@
 # assertj-reactor
 AssertJ extensions for Mono and Flux.
 
-[ ![Download](https://api.bintray.com/packages/jacek-rzrz/assertj-reactor/assertj-reactor/images/download.svg) ](https://bintray.com/jacek-rzrz/assertj-reactor/assertj-reactor/_latestVersion)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.rzrz/assertj-reactor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/pl.rzrz/assertj-reactor)
 
 ## Getting started
 Assertions extend from AssertJ core 
