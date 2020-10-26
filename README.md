@@ -41,6 +41,12 @@ assertThat(mono).completes();
 ``` java
 Flux<String> flux = Flux.just("one", "two", "three");
 
-assertThat(flux).sendsItems(3);
+assertThat(flux).emitsCount(3);
 ```
 
+### Check item emitted
+```
+Flux<String> flux = Flux.just("one", "two", "three");
+
+assertThat(flux).emits("two");
+```

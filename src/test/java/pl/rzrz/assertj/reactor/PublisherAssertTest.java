@@ -54,23 +54,4 @@ class PublisherAssertTest {
     public void completes_whenElementsWithNoError_passesAssertion() {
         assertThat(completePublisher()).completes();
     }
-
-    @Test
-    public void sendsItems_whenError_failsAssertion() {
-        assertThrows(AssertionError.class, () -> {
-            assertThat(errorPublisher(2)).sendsItems(2);
-        });
-    }
-
-    @Test
-    public void sendsItems_whenDifferentNumberOfItems_failsAssertion() {
-        assertThrows(AssertionError.class, () -> {
-            assertThat(completePublisher(5)).sendsItems(2);
-        });
-    }
-
-    @Test
-    public void sendsItems_whenSameNumberOfItems_passesAssertion() {
-        assertThat(completePublisher(2)).sendsItems(2);
-    }
 }

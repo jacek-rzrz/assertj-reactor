@@ -47,12 +47,22 @@ public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publi
         return this;
     }
 
-    public PublisherAssert<T> sendsItems(int expectedItemCount) {
+    public PublisherAssert<T> emitsCount(int expectedCount) {
         completes();
-        int actualItemCount = result.getItems().size();
-        if (actualItemCount != expectedItemCount) {
-            failWithActualExpectedAndMessage(actualItemCount, expectedItemCount,
-                    "Expected count %d but was %d", expectedItemCount, actualItemCount);
+        int actualCount = result.getItems().size();
+        if (actualCount != expectedCount) {
+            failWithActualExpectedAndMessage(actualCount, expectedCount,
+                    "Expected count %d but was %d", expectedCount, actualCount);
+        }
+        return this;
+    }
+
+    public PublisherAssert<T> emits(T expectedItem) {
+        completes();
+        if (!result.getItems().contains(expectedItem)) {
+            failWithActualExpectedAndMessage(result.getItems(), expectedItem,
+                    "Expected %s to contain %s", result.getItems(), expectedItem
+            );
         }
         return this;
     }
