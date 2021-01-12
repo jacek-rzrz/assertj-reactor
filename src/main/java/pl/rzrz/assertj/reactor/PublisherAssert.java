@@ -5,7 +5,11 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publisher<T>> {
@@ -52,7 +56,7 @@ public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publi
         int actualCount = result.getItems().size();
         if (actualCount != expectedCount) {
             failWithActualExpectedAndMessage(actualCount, expectedCount,
-                    "Expected count %d but was %d", expectedCount, actualCount);
+                "Expected count %d but was %d", expectedCount, actualCount);
         }
         return this;
     }
@@ -61,9 +65,56 @@ public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publi
         completes();
         if (!result.getItems().contains(expectedItem)) {
             failWithActualExpectedAndMessage(result.getItems(), expectedItem,
-                    "Expected %s to contain %s", result.getItems(), expectedItem
+                "Expected %s to contain %s", result.getItems(), expectedItem
             );
         }
         return this;
+    }
+
+    public PublisherAssert<T> emitsExactly(T... expectedItems) {
+
+        if (result.getItems().size() != expectedItems.length) {
+            failWithActualExpectedAndMessage(result.getItems(), expectedItems,
+                "Expected %s to contain %d items", result.getItems(), expectedItems.length
+            );
+        }
+
+        Set<T> actualUniqueItems = new HashSet<>(result.getItems());
+        Set<T> expectedUniqueItems = new HashSet<>(Arrays.asList(expectedItems));
+
+        Set<T> unexpectedItems = difference(actualUniqueItems, expectedUniqueItems);
+        Set<T> missingItems = difference(expectedUniqueItems, actualUniqueItems);
+
+        if (unexpectedItems.size() + missingItems.size() > 0) {
+            failWithActualExpectedAndMessage(result.getItems(),
+                expectedItems,
+                "Expected %s to contain different items. Unexpected: %s, missing: %s",
+                result.getItems(),
+                unexpectedItems,
+                missingItems
+            );
+        }
+
+        for (int i = 0; i < expectedItems.length; i++) {
+            T actual = result.getItems().get(i);
+            T expected = expectedItems[i];
+            if (!Objects.equals(actual, expected)) {
+                failWithActualExpectedAndMessage(result.getItems(),
+                    expectedItems,
+                    "Items in %s were expected in different order. Expected %s at index %d, found %s",
+                    result.getItems(),
+                    expected,
+                    i,
+                    actual);
+            }
+        }
+
+        return this;
+    }
+
+    private Set<T> difference(Set<T> minuend, Set<T> subtrahend) {
+        Set<T> set = new HashSet<>(minuend);
+        set.removeAll(subtrahend);
+        return set;
     }
 }

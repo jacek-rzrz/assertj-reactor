@@ -49,4 +49,36 @@ public class PublisherAssertCollectionLikeTest {
                 .isInstanceOf(AssertionError.class)
                 .hasMessage("Expected [one, two] to contain three");
     }
+
+    @Test
+    public void emitsExactly_whenExactMatch_passesAssertion() {
+        assertThat(completePublisher("one", "two")).emitsExactly("one", "two");
+    }
+
+    @Test
+    public void emitsExactly_whenExtraItems_failsAssertion() {
+        assertThatThrownBy(() ->
+            assertThat(completePublisher("one")).emitsExactly("one", "two")
+        )
+            .isInstanceOf(AssertionError.class)
+            .hasMessage("Expected [one] to contain 2 items");
+    }
+
+    @Test
+    public void emitsExactly_whenDifferentItems_failsAssertion() {
+        assertThatThrownBy(() ->
+            assertThat(completePublisher("one", "two")).emitsExactly("one", "three")
+        )
+            .isInstanceOf(AssertionError.class)
+            .hasMessage("Expected [one, two] to contain different items. Unexpected: [two], missing: [three]");
+    }
+
+    @Test
+    public void emitsExactly_whenDifferentOrder_failsAssertion() {
+        assertThatThrownBy(() ->
+            assertThat(completePublisher("one", "two")).emitsExactly("two", "one")
+        )
+            .isInstanceOf(AssertionError.class)
+            .hasMessage("Items in [one, two] were expected in different order. Expected two at index 0, found one");
+    }
 }

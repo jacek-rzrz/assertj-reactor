@@ -50,3 +50,10 @@ Flux<String> flux = Flux.just("one", "two", "three");
 
 assertThat(flux).emits("two");
 ```
+
+### Check exactly some items emitted
+```
+Flux<String> flux = Flux.just("one", "two", "three");
+
+assertThat(flux).emitsExactly("one", "two", "three");
+```
