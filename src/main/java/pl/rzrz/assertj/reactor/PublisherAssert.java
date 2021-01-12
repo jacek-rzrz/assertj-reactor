@@ -71,16 +71,21 @@ public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publi
         return this;
     }
 
-    public PublisherAssert<T> emitsExactly(T... expectedItems) {
+    @SafeVarargs
+    public final PublisherAssert<T> emitsExactly(T... expectedItems) {
+        return emitsExactly(Arrays.asList(expectedItems));
+    }
 
-        if (result.getItems().size() != expectedItems.length) {
+    private PublisherAssert<T> emitsExactly(List<T> expectedItems) {
+
+        if (result.getItems().size() != expectedItems.size()) {
             failWithActualExpectedAndMessage(result.getItems(), expectedItems,
-                "Expected %s to contain %d items", result.getItems(), expectedItems.length
+                "Expected %s to contain %d items", result.getItems(), expectedItems.size()
             );
         }
 
         Set<T> actualUniqueItems = new HashSet<>(result.getItems());
-        Set<T> expectedUniqueItems = new HashSet<>(Arrays.asList(expectedItems));
+        Set<T> expectedUniqueItems = new HashSet<>(expectedItems);
 
         Set<T> unexpectedItems = difference(actualUniqueItems, expectedUniqueItems);
         Set<T> missingItems = difference(expectedUniqueItems, actualUniqueItems);
@@ -95,9 +100,9 @@ public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publi
             );
         }
 
-        for (int i = 0; i < expectedItems.length; i++) {
+        for (int i = 0; i < expectedItems.size(); i++) {
             T actual = result.getItems().get(i);
-            T expected = expectedItems[i];
+            T expected = expectedItems.get(i);
             if (!Objects.equals(actual, expected)) {
                 failWithActualExpectedAndMessage(result.getItems(),
                     expectedItems,
