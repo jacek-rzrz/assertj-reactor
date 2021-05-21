@@ -29,10 +29,11 @@ echo "Running tests..."
 ./gradlew clean test --no-build-cache
 
 echo "Publishing..."
-./gradlew bintrayUpload
+./gradlew publish
 
 echo "Tagging the release..."
 git tag $version
 git push origin $version
 
-echo "All done"
+echo "All done."
+echo "Manually release from staging: https://oss.sonatype.org/#stagingRepositories"

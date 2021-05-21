@@ -1,14 +1,13 @@
-import com.jfrog.bintray.gradle.BintrayExtension.*
-import java.util.*
+import java.net.URI
 
-version = "1.0.6"
+version = "1.0.7"
 description = "AssertJ extensions for Mono and Flux."
 group = "pl.rzrz"
 
 plugins {
     `java-library`
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.5"
+    signing
 }
 
 java {
@@ -17,7 +16,7 @@ java {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 java {
@@ -78,39 +77,24 @@ configure<PublishingExtension> {
                     developerConnection.set("scm:git:ssh://github.com:$githubPath.git")
                 }
             }
+
+            repositories {
+                maven {
+                    url = URI.create("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                    credentials {
+                        val nexusUsername: String by project
+                        val nexusPassword: String by project
+                        username = nexusUsername
+                        password = nexusPassword
+                    }
+                }
+            }
         }
     }
 }
 
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_KEY")
-    setPublications("mavenProject")
-    dryRun = false
-    publish = true
-    pkg(closureOf<PackageConfig> {
-        repo = project.name
-        name = project.name
-        setLicenses("Apache-2.0")
-        vcsUrl = githubUrl
-        issueTrackerUrl = "$githubUrl/issues"
-        publicDownloadNumbers = true
-        githubRepo = githubPath
-        version(closureOf<VersionConfig> {
-            name = project.version.toString()
-            desc = project.description
-            released = Date().toString()
-            gpg(closureOf<GpgConfig> {
-                sign = true
-            })
-            mavenCentralSync(closureOf<MavenCentralSyncConfig> {
-                sync = true
-                user = System.getenv("OSS_SONATYPE_USER")
-                password = System.getenv("OSS_SONATYPE_PASSWORD")
-                close = "1"
-            })
-        })
-    })
+signing {
+    sign(publishing.publications["mavenProject"])
 }
 
 tasks.create("printVersion") {
