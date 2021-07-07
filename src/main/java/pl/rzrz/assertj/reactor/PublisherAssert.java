@@ -76,6 +76,14 @@ public class PublisherAssert<T> extends AbstractAssert<PublisherAssert<T>, Publi
         return emitsExactly(Arrays.asList(expectedItems));
     }
 
+    public PublisherAssert<T> emitsItems(Consumer<List<T>> assertions) {
+        if (result.hasError()) {
+            failWithMessage("Publisher sent an error: %s", result.getError());
+        }
+        assertions.accept(result.getItems());
+        return this;
+    }
+
     private PublisherAssert<T> emitsExactly(List<T> expectedItems) {
 
         if (result.getItems().size() != expectedItems.size()) {
