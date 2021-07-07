@@ -1,6 +1,6 @@
 import java.net.URI
 
-version = "1.0.7"
+version = "1.0.8"
 description = "AssertJ extensions for Mono and Flux."
 group = "pl.rzrz"
 
